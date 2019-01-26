@@ -14,27 +14,29 @@ class main():
      self.credit = float(input("หน่วยกิต:"))
      self.grade = input("เกรด:")
      self.list= [self.year,self.subject,self.credit,self.grade]
-     print(self.Choosedata)
      self.Choosedata.loc[len(self.Choosedata),:]=(self.list)
-     print(self.Choosedata)
+
 
     def editgrade(self):
-     self.row1 = input("Select row you want to edit: ")
-     self.column1 = input("Select column you want to edit:" )
-     self.editgrade1 = input("Select grade you want to edit:")
-     self.Choosedata.set_value('5', self.column1, self.editgrade1)
-     self.Choosedata.to_csv("1.csv")
-     print(self.row1)
+     self.col = input("ต้องการเเก้ไขสิ่งใด:")
+     self.row = int(input("แถวที่เท่าไหร่:"))
+     self.edit = input("เเก้ไขเป็น")
+     if (self.col == 'หน่วยกิต'):
+         float(self.edit)
+         print("เเก้ไขเสร็จสิ้น")
+     else:
+         print("เเก้ไขเสร็จสิ้น")
+     self.Choosedata.loc[self.Choosedata.index[self.row], self.col] = self.edit
+     print(self.Choosedata)
+
 
     """funtion for calculate grade each term"""
     def calcularategrade(self):
      rategrade = {'A': 4, 'B+': 3.5,'B': 3,'C+': 2.5,'C': 2,'D+': 1.5,'D': 1,'F': 0} #set value for convert grade to numaric
      self.Choosedata1 = self.Choosedata.replace({'เกรด':rategrade})
-     print(self.Choosedata1)
      self.Choose = self.Choosedata1[['เกรด']]
      self.Choosedata = pd.concat([self.Choosedata,self.Choose], axis=1) #include dataframe for continue calculate
      self.Choosedata.columns = ['ปีการศึกษา','ชื่อวิชา','หน่วยกิต','เกรด','น้ำหนักเฉลี่ย']     #rename duplicate column name
-     print(self.Choosedata)
      self.Choosedata['นก*เกรด'] = self.Choosedata['หน่วยกิต'] * self.Choosedata['น้ำหนักเฉลี่ย']
      del self.Choosedata['น้ำหนักเฉลี่ย']         #Deleted columns that have not been calculated
      self.Choosedata['รวมหน่วยกิต'] = self.Choosedata.groupby(['ปีการศึกษา'])['หน่วยกิต'].transform('sum') #Total for further calculation
@@ -52,12 +54,12 @@ class main():
      del self.Choosedata['รวมน้ำหนัก']
      del self.Choosedata['นก*เกรด']
      self.Choosedata = pd.concat([self.Choosedata,self.Newdata], axis=1) # Combine old and new data into the same dataframe
-     print(self.Choosedata) # Export dataframe to CSV file
+     #print(self.Choosedata) # Export dataframe to CSV file
 
 demo = main()
 demo.readfile()
-demo.insertgrade()
-demo.calcularategrade()
+demo.editgrade()
+#demo.calcularategrade()
 
 
 
