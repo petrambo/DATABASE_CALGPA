@@ -9,11 +9,13 @@ class main():
      self.Choosedata = self.Choosedata.iloc[0:]
 
     def insertgrade(self):
-     self.row = input("Select row you want to edit: ")
-     self.column = input("Select column you want to edit:" )
-     self.editgrade = input("Select grade you want to edit:")
-     self.Choosedata.loc[self.row,self.column] = self.editgrade
-     self.Choosedata.to_csv("1.csv")
+     self.year = input("ปีการศึกษา: ")
+     self.subject = input("ชื่อวิชา:" )
+     self.credit = float(input("หน่วยกิต:"))
+     self.grade = input("เกรด:")
+     self.list= [self.year,self.subject,self.credit,self.grade]
+     print(self.Choosedata)
+     self.Choosedata.loc[len(self.Choosedata),:]=(self.list)
      print(self.Choosedata)
 
     def editgrade(self):
@@ -26,17 +28,18 @@ class main():
 
     """funtion for calculate grade each term"""
     def calcularategrade(self):
-     idx = 0
      rategrade = {'A': 4, 'B+': 3.5,'B': 3,'C+': 2.5,'C': 2,'D+': 1.5,'D': 1,'F': 0} #set value for convert grade to numaric
      self.Choosedata1 = self.Choosedata.replace({'เกรด':rategrade})
+     print(self.Choosedata1)
      self.Choose = self.Choosedata1[['เกรด']]
      self.Choosedata = pd.concat([self.Choosedata,self.Choose], axis=1) #include dataframe for continue calculate
      self.Choosedata.columns = ['ปีการศึกษา','ชื่อวิชา','หน่วยกิต','เกรด','น้ำหนักเฉลี่ย']     #rename duplicate column name
+     print(self.Choosedata)
      self.Choosedata['นก*เกรด'] = self.Choosedata['หน่วยกิต'] * self.Choosedata['น้ำหนักเฉลี่ย']
      del self.Choosedata['น้ำหนักเฉลี่ย']         #Deleted columns that have not been calculated
      self.Choosedata['รวมหน่วยกิต'] = self.Choosedata.groupby(['ปีการศึกษา'])['หน่วยกิต'].transform('sum') #Total for further calculation
      self.Choosedata['รวมน้ำหนัก'] = self.Choosedata.groupby(['ปีการศึกษา'])['นก*เกรด'].transform('sum')
-     self.Newdata = self.Choosedata.drop_duplicates(subset=['ปีการศึกษา'])   # Create new data for calcalate grade each term
+     self.Newdata = self.Choosedata.drop_duplicates(subset=['ปีการศึกษา'])   # Create new data for calcalate Semester grades
      del self.Newdata['ชื่อวิชา'] # Delete the calculated columns for the sort of dataframe.
      del self.Newdata['เกรด']
      del self.Newdata['นก*เกรด']
@@ -49,11 +52,11 @@ class main():
      del self.Choosedata['รวมน้ำหนัก']
      del self.Choosedata['นก*เกรด']
      self.Choosedata = pd.concat([self.Choosedata,self.Newdata], axis=1) # Combine old and new data into the same dataframe
-     self.Choosedata.to_csv("1.csv") # Export dataframe to CSV file
+     print(self.Choosedata) # Export dataframe to CSV file
 
 demo = main()
 demo.readfile()
-#demo.editgrade()
+demo.insertgrade()
 demo.calcularategrade()
 
 
